@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bilingual MCQ Quiz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6" id="quiz-container">
+<div class="bg-blue-900 text-white text-center py-2 rounded-t-lg">
+<div class="flex justify-between items-center px-4">
+<span>Time: <span id="timer">10:00</span></span>
+<span>Question <span id="question-number">1</span> / 100</span>
+</div>
+</div>
+<div class="mt-4">
+<p class="text-lg font-semibold mb-4" id="question"></p>
+<div class="space-y-4" id="options"></div>
+<div class="mt-6 text-center">
+<button class="bg-green-500 text-white py-2 px-6 rounded-lg" id="next-btn">NEXT</button>
+</div>
+</div>
+</div>
+
+<!-- Result Section (Hidden Initially) -->
+<div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6 text-center hidden" id="result-container">
+    <h2 class="text-2xl font-bold">Quiz Completed!</h2>
+    <p class="text-lg mt-4">Your Score: <span id="score"></span> / 100</p>
+</div>
+
+<script>
+const questions = [
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Dr. B.R. Ambedkar"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Physics? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of India’s Constitution? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Dr. B.R. Ambedkar"},
+    {"q": "Who is known as the father of India’s Constitution? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Jawaharlal Nehru"},
+    {"q": "Who is known as the father of Modern Science? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of India’s Constitution? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Mahatma Gandhi"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Charles Darwin"},
+    {"q": "Who is known as the father of Physics? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Physics? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Modern Science? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Marie Curie"},
+    {"q": "Who is known as the father of Indian Economy? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "P.C. Mahalanobis"},
+    {"q": "Who is known as the father of Modern Science? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Marie Curie"},
+    {"q": "Who is known as the father of Indian Economy? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Raghuram Rajan"},
+    {"q": "Who is known as the father of Indian Economy? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Indian Economy? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "P.C. Mahalanobis"},
+    {"q": "Who is known as the father of Indian Economy? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "P.C. Mahalanobis"},
+    {"q": "Who is known as the father of Physics? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Indian Economy? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Physics? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Physics? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Nikola Tesla"},
+    {"q": "Who is known as the father of Physics? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Physics? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Physics? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of India’s Constitution? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Mahatma Gandhi"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Physics? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of India’s Constitution? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Jawaharlal Nehru"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Dr. B.R. Ambedkar"},
+    {"q": "Who is known as the father of Physics? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Marie Curie"},
+    {"q": "Who is known as the father of Physics? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Nikola Tesla"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Modern Science? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of India’s Constitution? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Jawaharlal Nehru"},
+    {"q": "Who is known as the father of Modern Science? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Nikola Tesla"},
+    {"q": "Who is known as the father of Indian Economy? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Marie Curie"},
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Mahatma Gandhi"},
+    {"q": "Who is known as the father of Indian Economy? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "P.C. Mahalanobis"},
+    {"q": "Who is known as the father of Indian Economy? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Modern Science? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Indian Economy? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Amartya Sen"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Nikola Tesla"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Physics? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Nikola Tesla"},
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Dr. B.R. Ambedkar"},
+    {"q": "Who is known as the father of Indian Economy? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Raghuram Rajan"},
+    {"q": "Who is known as the father of Indian Economy? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Raghuram Rajan"},
+    {"q": "Who is known as the father of India’s Constitution? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Mahatma Gandhi"},
+    {"q": "Who is known as the father of Indian Economy? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Amartya Sen"},
+    {"q": "Who is known as the father of Indian Economy? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Physics? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Indian Economy? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "P.C. Mahalanobis"},
+    {"q": "Who is known as the father of Physics? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of India’s Constitution? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Mahatma Gandhi"},
+    {"q": "Who is known as the father of Modern Science? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Marie Curie"},
+    {"q": "Who is known as the father of Indian Economy? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Raghuram Rajan"},
+    {"q": "Who is known as the father of Modern Science? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Indian Economy? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Indian Economy? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Physics? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Nikola Tesla"},
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Jawaharlal Nehru"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Charles Darwin"},
+    {"q": "Who is known as the father of Indian Economy? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Amartya Sen"},
+    {"q": "Who is known as the father of Physics? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Modern Science? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Charles Darwin"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Charles Darwin"},
+    {"q": "Who is known as the father of Indian Economy? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Amartya Sen"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Charles Darwin"},
+    {"q": "Who is known as the father of India’s Constitution? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Dr. B.R. Ambedkar"},
+    {"q": "Who is known as the father of Modern Science? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Indian Economy? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "P.C. Mahalanobis"},
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Dr. B.R. Ambedkar"},
+    {"q": "Who is known as the father of Indian Economy? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Raghuram Rajan"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Marie Curie"},
+    {"q": "Who is known as the father of Modern Science? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Marie Curie"},
+    {"q": "Who is known as the father of Physics? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Indian Economy? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "P.C. Mahalanobis"},
+    {"q": "Who is known as the father of India’s Constitution? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Dr. B.R. Ambedkar"},
+    {"q": "Who is known as the father of Modern Science? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Galileo Galilei"},
+    {"q": "Who is known as the father of Physics? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Nikola Tesla"},
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Jawaharlal Nehru"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of India’s Constitution? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Jawaharlal Nehru"},
+    {"q": "Who is known as the father of Physics? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Nikola Tesla", "Albert Einstein", "Galileo Galilei", "Isaac Newton"], "answer": "Albert Einstein"},
+    {"q": "Who is known as the father of Indian Economy? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Dr. Manmohan Singh", "P.C. Mahalanobis", "Raghuram Rajan", "Amartya Sen"], "answer": "Dr. Manmohan Singh"},
+    {"q": "Who is known as the father of Modern Science? / भारत के संविधान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Charles Darwin"},
+    {"q": "Who is known as the father of India’s Constitution? / भौतिकी के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Mahatma Gandhi"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Isaac Newton"},
+    {"q": "Who is known as the father of Modern Science? / आधुनिक विज्ञान के जनक कौन माने जाते हैं?", "options": ["Galileo Galilei", "Isaac Newton", "Marie Curie", "Charles Darwin"], "answer": "Charles Darwin"},
+    {"q": "Who is known as the father of India’s Constitution? / भारतीय अर्थव्यवस्था के जनक कौन माने जाते हैं?", "options": ["Jawaharlal Nehru", "Mahatma Gandhi", "Sardar Patel", "Dr. B.R. Ambedkar"], "answer": "Jawaharlal Nehru"},
+ 
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+function loadQuestion() {
+    if (currentQuestion >= questions.length) {
+        showResult();
+        return;
+    }
+
+    const questionElement = document.getElementById("question");
+    const optionsElement = document.getElementById("options");
+    const questionNumber = document.getElementById("question-number");
+
+    const q = questions[currentQuestion];
+
+    questionElement.innerHTML = `Q.${currentQuestion + 1}. ${q.q}`;
+    optionsElement.innerHTML = "";
+
+    q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.className = "block w-full text-left p-2 border rounded-lg bg-gray-200 hover:bg-gray-300";
+        button.innerHTML = `${option}`;
+        button.onclick = () => checkAnswer(option, q.answer);
+        optionsElement.appendChild(button);
+    });
+
+    questionNumber.textContent = currentQuestion + 1;
+}
+
+function checkAnswer(selected, correct) {
+    if (selected === correct) {
+        score++;
+    }
+    nextQuestion();
+}
+
+function nextQuestion() {
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        loadQuestion();
+    } else {
+        showResult();
+    }
+}
+
+function showResult() {
+    document.getElementById("quiz-container").classList.add("hidden");
+    document.getElementById("result-container").classList.remove("hidden");
+    document.getElementById("score").textContent = score;
+}
+
+document.getElementById("next-btn").addEventListener("click", nextQuestion);
+
+loadQuestion();
+</script>
+</body>
+</html>

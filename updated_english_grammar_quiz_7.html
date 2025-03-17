@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>English Grammar Quiz</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-white w-full max-w-md rounded-lg shadow-lg p-6">
+<div class="bg-blue-900 text-white text-center py-2 rounded-t-lg">
+<div class="flex justify-between items-center px-4">
+<span>Time: <span id="timer">10:00</span></span>
+<span>Question <span id="question-number">1</span> / 100</span>
+</div>
+</div>
+<div class="mt-4">
+<p class="text-lg font-semibold mb-4" id="question"></p>
+<div class="space-y-4" id="options"></div>
+<div class="mt-6 text-center">
+<button class="bg-green-500 text-white py-2 px-6 rounded-lg" id="next-btn">NEXT</button>
+</div>
+</div>
+</div>
+<script>
+        const questions = [{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Eating', 'Eats', 'Ate', 'Eated'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She writes a book.', 'She wrote a book.', 'A book was written by her.', 'She will write a book.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childies', 'Childes', 'Childs', 'Children'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Apple', 'Run', 'And', 'Quickly'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Recieve', 'Receive', 'Reiceve', 'Recive'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Run', 'He', 'Big', 'Apple'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She don't like ice cream.", 'She no like ice cream.', 'She not like ice cream.', "She doesn't like ice cream."],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['an', 'the', 'a', 'no article'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['go', 'going', 'gone', 'goes'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Slowly', 'Run', 'Beautiful', 'Apple'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Eats', 'Ate', 'Eating', 'Eated'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['A book was written by her.', 'She wrote a book.', 'She writes a book.', 'She will write a book.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childes', 'Childies', 'Childs', 'Children'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Quickly', 'Apple', 'Run', 'And'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Recieve', 'Reiceve', 'Recive', 'Receive'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Run', 'Apple', 'Big', 'He'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She doesn't like ice cream.", "She don't like ice cream.", 'She no like ice cream.', 'She not like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['the', 'an', 'no article', 'a'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['going', 'gone', 'goes', 'go'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Run', 'Apple', 'Slowly', 'Beautiful'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Eating', 'Eated', 'Ate', 'Eats'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She will write a book.', 'She writes a book.', 'A book was written by her.', 'She wrote a book.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childes', 'Childies', 'Childs', 'Children'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Apple', 'And', 'Quickly', 'Run'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Recive', 'Recieve', 'Reiceve', 'Receive'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Big', 'He', 'Run', 'Apple'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She don't like ice cream.", "She doesn't like ice cream.", 'She no like ice cream.', 'She not like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['no article', 'the', 'a', 'an'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['gone', 'going', 'go', 'goes'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Slowly', 'Run', 'Beautiful', 'Apple'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Ate', 'Eating', 'Eated', 'Eats'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She wrote a book.', 'She writes a book.', 'She will write a book.', 'A book was written by her.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childes', 'Children', 'Childs', 'Childies'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Run', 'Apple', 'Quickly', 'And'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Receive', 'Recieve', 'Reiceve', 'Recive'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Big', 'Run', 'He', 'Apple'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ['She not like ice cream.', "She doesn't like ice cream.", "She don't like ice cream.", 'She no like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['the', 'a', 'an', 'no article'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['gone', 'go', 'goes', 'going'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Run', 'Beautiful', 'Slowly', 'Apple'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Eats', 'Eated', 'Eating', 'Ate'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She will write a book.', 'A book was written by her.', 'She wrote a book.', 'She writes a book.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childes', 'Childies', 'Children', 'Childs'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['And', 'Apple', 'Quickly', 'Run'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Recive', 'Receive', 'Reiceve', 'Recieve'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['He', 'Run', 'Apple', 'Big'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ['She not like ice cream.', "She doesn't like ice cream.", "She don't like ice cream.", 'She no like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['an', 'no article', 'a', 'the'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['gone', 'go', 'going', 'goes'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Beautiful', 'Apple', 'Slowly', 'Run'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Eats', 'Eated', 'Ate', 'Eating'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She wrote a book.', 'She will write a book.', 'She writes a book.', 'A book was written by her.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childies', 'Childs', 'Children', 'Childes'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Run', 'And', 'Quickly', 'Apple'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Reiceve', 'Recieve', 'Recive', 'Receive'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Apple', 'Big', 'Run', 'He'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She don't like ice cream.", 'She not like ice cream.', "She doesn't like ice cream.", 'She no like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['an', 'a', 'no article', 'the'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['go', 'goes', 'going', 'gone'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Apple', 'Slowly', 'Run', 'Beautiful'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Ate', 'Eating', 'Eats', 'Eated'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['A book was written by her.', 'She wrote a book.', 'She writes a book.', 'She will write a book.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Children', 'Childes', 'Childs', 'Childies'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Quickly', 'Run', 'And', 'Apple'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Recieve', 'Recive', 'Receive', 'Reiceve'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Apple', 'Run', 'He', 'Big'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She don't like ice cream.", 'She not like ice cream.', "She doesn't like ice cream.", 'She no like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['no article', 'an', 'a', 'the'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['gone', 'go', 'going', 'goes'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Slowly', 'Beautiful', 'Apple', 'Run'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Ate', 'Eats', 'Eating', 'Eated'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She writes a book.', 'She will write a book.', 'She wrote a book.', 'A book was written by her.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childies', 'Childs', 'Childes', 'Children'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Quickly', 'Apple', 'And', 'Run'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Reiceve', 'Receive', 'Recieve', 'Recive'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['He', 'Apple', 'Run', 'Big'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She don't like ice cream.", 'She not like ice cream.', "She doesn't like ice cream.", 'She no like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['a', 'the', 'no article', 'an'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['go', 'gone', 'goes', 'going'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Beautiful', 'Apple', 'Slowly', 'Run'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Ate', 'Eating', 'Eats', 'Eated'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She will write a book.', 'She writes a book.', 'A book was written by her.', 'She wrote a book.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childies', 'Childes', 'Childs', 'Children'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Run', 'Quickly', 'Apple', 'And'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Recieve', 'Reiceve', 'Recive', 'Receive'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Run', 'Big', 'Apple', 'He'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She doesn't like ice cream.", 'She no like ice cream.', 'She not like ice cream.', "She don't like ice cream."],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['the', 'an', 'a', 'no article'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['going', 'go', 'gone', 'goes'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Apple', 'Run', 'Beautiful', 'Slowly'],
+            "answer": "Beautiful"
+        },{
+            "q": "What is the past tense of 'eat'?",
+            "options": ['Eated', 'Eating', 'Ate', 'Eats'],
+            "answer": "Ate"
+        },{
+            "q": "Which sentence is in the passive voice?",
+            "options": ['She writes a book.', 'She will write a book.', 'A book was written by her.', 'She wrote a book.'],
+            "answer": "A book was written by her."
+        },{
+            "q": "What is the plural of 'child'?",
+            "options": ['Childs', 'Children', 'Childies', 'Childes'],
+            "answer": "Children"
+        },{
+            "q": "Which of the following is a conjunction?",
+            "options": ['Quickly', 'Apple', 'Run', 'And'],
+            "answer": "And"
+        },{
+            "q": "Identify the correct spelling:",
+            "options": ['Recieve', 'Recive', 'Receive', 'Reiceve'],
+            "answer": "Receive"
+        },{
+            "q": "Which of the following is a pronoun?",
+            "options": ['Run', 'Apple', 'He', 'Big'],
+            "answer": "He"
+        },{
+            "q": "Identify the correct sentence:",
+            "options": ["She doesn't like ice cream.", "She don't like ice cream.", 'She no like ice cream.', 'She not like ice cream.'],
+            "answer": "She doesn't like ice cream."
+        },{
+            "q": "Choose the correct article: I saw ____ elephant at the zoo.",
+            "options": ['an', 'the', 'no article', 'a'],
+            "answer": "an"
+        },{
+            "q": "Choose the correct form of the verb: She ____ to the market every day.",
+            "options": ['go', 'gone', 'going', 'goes'],
+            "answer": "goes"
+        },{
+            "q": "Which of the following is an adjective?",
+            "options": ['Run', 'Beautiful', 'Slowly', 'Apple'],
+            "answer": "Beautiful"
+        },     
+        ];
+
+        let currentQuestion = 0;
+
+        function loadQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+            const questionNumber = document.getElementById("question-number");
+
+            const q = questions[currentQuestion];
+
+            questionElement.innerHTML = `Q.${currentQuestion + 1}. ${q.q}`;
+            optionsElement.innerHTML = "";
+
+            q.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.className = "block w-full text-left p-2 border rounded-lg bg-gray-200 hover:bg-gray-300";
+                button.innerHTML = `${option}`;
+                button.onclick = () => checkAnswer(option, q.answer);
+                optionsElement.appendChild(button);
+            });
+
+            questionNumber.textContent = currentQuestion + 1;
+        }
+
+        function checkAnswer(selected, correct) {
+            if (selected === correct) {
+                alert("✅ Correct Answer!");
+            } else {
+                alert("❌ Wrong Answer! Correct: " + correct);
+            }
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+            }
+        }
+
+        document.getElementById("next-btn").addEventListener("click", nextQuestion);
+
+        loadQuestion();
+    </script>
+</body>
+</html>

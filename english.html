@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Grammar Levels</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-2xl">
+        <div class="flex items-center justify-between bg-gray-800 text-white p-3 rounded-t-lg">
+            <button id="back-btn" class="text-white">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1 class="text-lg font-semibold">English Grammar Quiz</h1>
+            <div></div>
+        </div>
+
+        <!-- Levels Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4"></div>
+    </div>
+
+    <script>
+        document.getElementById("back-btn").addEventListener("click", function() {
+            window.history.back(); // Redirect to the previous page
+        });
+
+        const levels = 8;
+
+        function getScore(level) {
+            return parseInt(localStorage.getItem("english_quiz_level" + level + "_score") || "0");
+        }
+
+        function generateLevelBlocks() {
+            let container = document.querySelector(".grid");
+            container.innerHTML = "";
+
+            for (let i = 1; i <= levels; i++) {
+                let score = getScore(i);
+                let previousLevelPassed = i === 1 || getScore(i - 1) >= 80; // Unlock only if previous level passed
+                let buttonText = score === 0 ? "Start" : score >= 80 ? "Start" : "Retry";
+                let buttonClass = previousLevelPassed ? "bg-white text-green-500" : "bg-gray-400 text-gray-700 cursor-not-allowed";
+                let buttonDisabled = previousLevelPassed ? "" : "disabled";
+
+                let levelBlock = `
+                    <div class="bg-green-500 text-center p-4 rounded-lg shadow-md">
+                        <h2 class="text-white font-bold text-lg">Level ${i}</h2>
+                        <p class="text-sm text-blue-200">${score > 0 ? score + "% Scored" : "Not Attempted"}</p>
+                        <a href="${previousLevelPassed ? `updated_english_grammar_quiz_${i}.html` : "#"}">
+                            <button class="${buttonClass} font-semibold py-2 px-5 rounded-full mt-3" ${buttonDisabled}>${buttonText}</button>
+                        </a>
+                    </div>
+                `;
+                container.innerHTML += levelBlock;
+            }
+        }
+
+        function saveScore(level, score) {
+            localStorage.setItem("updated_english_grammer_level" + level + "_score", score);
+            alert("Your score has been saved!");
+            generateLevelBlocks(); // Refresh levels dynamically
+        }
+
+        document.addEventListener("DOMContentLoaded", generateLevelBlocks);
+    </script>
+</body>
+</html>

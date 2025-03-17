@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz & Notes</title>
+    
+    <!-- AdMob Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-app-pub-5993809511143733~8747151886",
+            enable_page_level_ads: true
+        });
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .sidebar { position: fixed; left: -100%; top: 0; width: 250px; height: 100%; background: white; padding: 15px; transition: 0.3s; }
+        .sidebar.show { left: 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; }
+        .subject {
+            cursor: pointer;
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            width: 90%;
+            max-width: 400px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            border: 5px solid black;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <button id="close-sidebar" class="bg-red-500 text-white p-2 rounded">Close</button>
+        <p class="mt-4 font-bold">Indian Army Exam</p>
+        <ul>
+            <li class="mt-2"><a href="https://www.instagram.com/model_aanyaa_002" target="_blank" class="text-blue-500">Instagram</a></li>
+            <li class="mt-2"><a href="https://t.me/yourchannel" target="_blank" class="text-blue-500">Telegram</a></li>
+            <li class="mt-2"><button id="share-app" class="bg-blue-500 text-white p-2 rounded mt-2">Share App</button></li>
+        </ul>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="bg-gray-800 text-white p-4 flex items-center justify-between">
+        <button id="menu-btn" class="text-2xl">&#9776;</button>
+        <h1>Hi Future Army!</h1>
+        <img src="logo.png" alt="Indian Army Logo" class="w-12 h-12">
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div class="p-4 text-center">
+            <div class="subject math" data-subject="math"><p>Math (Quiz)</p></div>
+            <div class="subject gk" data-subject="gk"><p>General Knowledge (Quiz)</p></div>
+            <div class="subject english" data-subject="english"><p>English Grammar (Quiz)</p></div>
+        </div>
+    </div>
+
+    <!-- AdMob Banner Ad -->
+    <div class="text-center my-4">
+        <ins class="adsbygoogle"
+            style="display:block"
+            data-ad-client="ca-app-pub-5993809511143733"
+            data-ad-slot="2119499510"
+            data-ad-format="auto"
+            data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-green-500 text-white text-center p-4 mt-6">
+        <p class="text-lg font-semibold">Best of Luck for Your Preparation! 🎯</p>
+    </footer>
+
+    <script>
+        const menuBtn = document.getElementById("menu-btn");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("overlay");
+        const closeSidebar = document.getElementById("close-sidebar");
+        const mainContent = document.getElementById("main-content");
+        const shareAppBtn = document.getElementById("share-app");
+
+        menuBtn.addEventListener("click", () => { 
+            sidebar.classList.add("show"); 
+            overlay.style.display = "block"; 
+            mainContent.classList.add("hidden-main"); 
+        });
+
+        overlay.addEventListener("click", () => { 
+            sidebar.classList.remove("show"); 
+            overlay.style.display = "none"; 
+            mainContent.classList.remove("hidden-main"); 
+        });
+
+        closeSidebar.addEventListener("click", () => { 
+            sidebar.classList.remove("show"); 
+            overlay.style.display = "none"; 
+            mainContent.classList.remove("hidden-main"); 
+        });
+
+        document.querySelectorAll(".subject").forEach(subject => {
+            subject.addEventListener("click", () => {
+                window.location.href = subject.getAttribute("data-subject") + ".html";
+            });
+        });
+
+        shareAppBtn.addEventListener("click", () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: "Check out this amazing Army Exam App!",
+                    text: "Prepare for your Indian Army Exam with this app.",
+                    url: window.location.href
+                }).then(() => console.log('Shared successfully'))
+                  .catch(error => console.error('Error sharing:', error));
+            } else {
+                alert("Sharing is not supported on this browser.");
+            }
+        });
+    </script>
+</body>
+</html>
