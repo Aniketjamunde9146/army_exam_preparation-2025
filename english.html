@@ -5,66 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>English Grammar Levels</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
-  <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-3xl">
-    <div class="flex items-center justify-between bg-gray-800 text-white p-3 rounded-t-lg">
-      <button id="back-btn" class="text-white">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h1 class="text-lg font-semibold">English Grammar Quiz</h1>
-      <div></div>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex items-center justify-center p-4 transition-all duration-300">
+
+  <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+    <!-- Header -->
+    <div class="flex items-center justify-between bg-gray-800 dark:bg-gray-700 text-white p-4 rounded-lg">
+      <button id="back-btn"><i class="fas fa-arrow-left"></i></button>
+      <h1 class="text-lg font-bold">English Grammar Levels</h1>
+      <button id="toggle-dark" title="Toggle Dark Mode"><i class="fas fa-moon"></i></button>
     </div>
 
     <!-- Levels Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4"></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-5" id="levels-container"></div>
   </div>
 
   <script>
-    document.getElementById("back-btn").addEventListener("click", function () {
-      window.history.back();
-    });
-
     const levels = 8;
 
     function getScore(level) {
       return parseInt(localStorage.getItem("updated_english_grammar_level" + level + "_score") || "0");
     }
 
-    function generateLevelBlocks() {
-      let container = document.querySelector(".grid");
+    function generateLevels() {
+      const container = document.getElementById("levels-container");
       container.innerHTML = "";
 
       for (let i = 1; i <= levels; i++) {
-        let score = getScore(i);
-        let isUnlocked = i === 1 || getScore(i - 1) >= 80;
-        let hasPassed = score >= 80;
-        let buttonText = score === 0 ? "Start" : hasPassed ? "Retake" : "Retry";
-        let buttonClass = isUnlocked ? "bg-white text-green-500" : "bg-gray-300 text-gray-500 cursor-not-allowed";
-        let buttonDisabled = isUnlocked ? "" : "disabled";
-        let statusIcon = score === 0 ? "⏳" : hasPassed ? "✔️" : "❌";
+        const score = getScore(i);
+        const unlocked = i === 1 || getScore(i - 1) >= 80;
+        const passed = score >= 80;
+        const icon = score === 0 ? "⏳" : passed ? "✔️" : "❌";
+        const progress = `${score}%`;
 
-        let levelBlock = `
-          <div class="bg-green-500 text-center p-4 rounded-lg shadow-md">
-            <h2 class="text-white font-bold text-lg">Level ${i}</h2>
-            <p class="text-sm text-blue-200">${score > 0 ? score + "% Scored " + statusIcon : "Not Attempted ⏳"}</p>
-            <a href="${isUnlocked ? `updated_english_grammar_quiz_${i}.html` : "#"}">
-              <button class="${buttonClass} font-semibold py-2 px-5 rounded-full mt-3" ${buttonDisabled}>${buttonText}</button>
+        const block = `
+          <div class="p-4 bg-green-500 text-white rounded-xl shadow-md flex flex-col items-center">
+            <i class="fas fa-book text-3xl mb-2"></i>
+            <h2 class="font-bold text-xl">Level ${i}</h2>
+            <p class="text-sm mb-1">${score > 0 ? `${progress} Scored ${icon}` : "Not Attempted ⏳"}</p>
+            <div class="w-full bg-white rounded-full h-2.5 mb-2">
+              <div class="bg-blue-400 h-2.5 rounded-full" style="width: ${score}%;"></div>
+            </div>
+            <a href="${unlocked ? `updated_english_grammar_quiz_${i}.html` : "#"}">
+              <button class="${unlocked ? 'bg-white text-green-700' : 'bg-gray-400 text-gray-500 cursor-not-allowed'} font-semibold py-1 px-5 rounded-full mt-2" ${unlocked ? '' : 'disabled'}>
+                ${score === 0 ? 'Start' : passed ? 'Retake' : 'Retry'}
+              </button>
             </a>
           </div>
         `;
-        container.innerHTML += levelBlock;
+        container.innerHTML += block;
       }
     }
 
     function saveScore(level, score) {
       localStorage.setItem("updated_english_grammar_level" + level + "_score", score);
-      alert("Your score has been saved!");
-      generateLevelBlocks();
+      generateLevels();
     }
 
-    document.addEventListener("DOMContentLoaded", generateLevelBlocks);
+    document.addEventListener("DOMContentLoaded", () => {
+      generateLevels();
+
+      document.getElementById("back-btn").onclick = () => window.history.back();
+      document.getElementById("toggle-dark").onclick = () => {
+        document.documentElement.classList.toggle("dark");
+      };
+    });
   </script>
+
 </body>
 </html>
