@@ -1,67 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>General Knowledge Levels</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GK Quiz Levels</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
-    <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-2xl">
-        <div class="flex items-center justify-between bg-gray-800 text-white p-3 rounded-t-lg">
-            <button id="back-btn" class="text-white">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <h1 class="text-lg font-semibold">General Knowledge Quiz</h1>
-            <div></div>
-        </div>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
 
-        <!-- Levels Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4"></div>
+  <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+    <!-- Header -->
+    <div class="flex items-center justify-between bg-gray-800 dark:bg-gray-700 text-white p-4 rounded-lg">
+      <button id="back-btn"><i class="fas fa-arrow-left"></i></button>
+      <h1 class="text-lg font-bold">GK Quiz Levels</h1>
+      <button id="toggle-dark" title="Toggle Dark Mode"><i class="fas fa-moon"></i></button>
     </div>
 
-    <script>
-        document.getElementById("back-btn").addEventListener("click", function() {
-            window.history.back(); // Redirects user to the previous page
-        });
+    <!-- Levels Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mt-5" id="levels-container"></div>
+  </div>
 
-        const levels = 8;
+  <script>
+    const totalLevels = 8;
 
-        function getScore(level) {
-            return parseInt(localStorage.getItem("gk_quiz_level" + level + "_score") || "0");
-        }
+    function getScore(level) {
+      return parseInt(localStorage.getItem("gk_level" + level + "_score") || "0");
+    }
 
-         function generateLevelBlocks() {
-            let container = document.querySelector(".grid");
-            container.innerHTML = "";
+    function generateLevels() {
+      const container = document.getElementById("levels-container");
+      container.innerHTML = "";
 
-            for (let i = 1; i <= levels; i++) {
-                let score = getScore(i);
-                let previousLevelPassed = i === 1 || getScore(i - 1) >= 80; // Unlock only if previous level passed
-                let buttonText = score === 0 ? "Start" : score >= 80 ? "Start" : "Retry";
-                let buttonClass = previousLevelPassed ? "bg-white text-green-500" : "bg-gray-400 text-gray-700 cursor-not-allowed";
-                let buttonDisabled = previousLevelPassed ? "" : "disabled";
+      for (let i = 1; i <= totalLevels; i++) {
+        const score = getScore(i);
+        const unlocked = i === 1 || getScore(i - 1) >= 80;
+        const passed = score >= 80;
+        const progress = score + "%";
+        const icon = score === 0 ? "⏳" : passed ? "✔️" : "❌";
 
-                let levelBlock = `
-                    <div class="bg-green-500 text-center p-4 rounded-lg shadow-md">
-                        <h2 class="text-white font-bold text-lg">Level ${i}</h2>
-                        <p class="text-sm text-blue-200">${score > 0 ? score + "% Scored" : "Not Attempted"}</p>
-                        <a href="${previousLevelPassed ? `gk_${i}.html` : "#"}">
-                            <button class="${buttonClass} font-semibold py-2 px-5 rounded-full mt-3" ${buttonDisabled}>${buttonText}</button>
-                        </a>
-                    </div>
-                `;
-                container.innerHTML += levelBlock;
-            }
-        }
-        function saveScore(level, score) {
-            localStorage.setItem("gk_quiz_level" + level + "_score", score);
-            alert("Your score has been saved!");
-            generateLevelBlocks(); // Refresh levels dynamically
-        }
+        const block = `
+          <div class="p-4 bg-green-500 text-white rounded-xl shadow-md flex flex-col items-center justify-between">
+            <i class="fas fa-graduation-cap text-3xl mb-2"></i>
+            <h2 class="font-bold text-xl">Level ${i}</h2>
+            <p class="text-sm mb-2">${score > 0 ? `${score}% Scored ${icon}` : "Not Attempted ⏳"}</p>
+            <div class="w-full bg-white rounded-full h-2.5 mb-2">
+              <div class="bg-blue-400 h-2.5 rounded-full" style="width: ${score}%;"></div>
+            </div>
+            <a href="${unlocked ? `gk_${i}.html` : '#'}">
+              <button class="${unlocked ? 'bg-white text-green-700' : 'bg-gray-400 text-gray-500 cursor-not-allowed'} font-semibold py-1 px-5 rounded-full mt-2" ${unlocked ? '' : 'disabled'}>
+                ${score === 0 ? 'Start' : passed ? 'Retake' : 'Retry'}
+              </button>
+            </a>
+          </div>
+        `;
+        container.innerHTML += block;
+      }
+    }
 
-        document.addEventListener("DOMContentLoaded", generateLevelBlocks);
-    </script>
+    function saveScore(level, score) {
+      localStorage.setItem("gk_level" + level + "_score", score);
+      generateLevels();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      generateLevels();
+
+      document.getElementById("back-btn").onclick = () => window.history.back();
+      document.getElementById("toggle-dark").onclick = () => {
+        document.documentElement.classList.toggle("dark");
+      };
+    });
+  </script>
+
 </body>
 </html>
