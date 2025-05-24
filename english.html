@@ -12,7 +12,7 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex items-center justify-center p-4 transition-all duration-300">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex items-center justify-center p-4 transition-colors duration-300">
 
   <div class="w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
     <!-- Header -->
@@ -27,7 +27,7 @@
   </div>
 
   <script>
-    const levels = 8;
+    const totalLevels = 8;
 
     function getScore(level) {
       return parseInt(localStorage.getItem("updated_english_grammar_level" + level + "_score") || "0");
@@ -37,22 +37,22 @@
       const container = document.getElementById("levels-container");
       container.innerHTML = "";
 
-      for (let i = 1; i <= levels; i++) {
+      for (let i = 1; i <= totalLevels; i++) {
         const score = getScore(i);
         const unlocked = i === 1 || getScore(i - 1) >= 80;
         const passed = score >= 80;
+        const progress = score + "%";
         const icon = score === 0 ? "⏳" : passed ? "✔️" : "❌";
-        const progress = `${score}%`;
 
         const block = `
-          <div class="p-4 bg-green-500 text-white rounded-xl shadow-md flex flex-col items-center">
+          <div class="p-4 bg-green-500 text-white rounded-xl shadow-md flex flex-col items-center justify-between">
             <i class="fas fa-book text-3xl mb-2"></i>
             <h2 class="font-bold text-xl">Level ${i}</h2>
-            <p class="text-sm mb-1">${score > 0 ? `${progress} Scored ${icon}` : "Not Attempted ⏳"}</p>
+            <p class="text-sm mb-2">${score > 0 ? `${score}% Scored ${icon}` : "Not Attempted ⏳"}</p>
             <div class="w-full bg-white rounded-full h-2.5 mb-2">
               <div class="bg-blue-400 h-2.5 rounded-full" style="width: ${score}%;"></div>
             </div>
-            <a href="${unlocked ? `updated_english_grammar_quiz_${i}.html` : "#"}">
+            <a href="${unlocked ? `updated_english_grammar_quiz_${i}.html` : '#'}">
               <button class="${unlocked ? 'bg-white text-green-700' : 'bg-gray-400 text-gray-500 cursor-not-allowed'} font-semibold py-1 px-5 rounded-full mt-2" ${unlocked ? '' : 'disabled'}>
                 ${score === 0 ? 'Start' : passed ? 'Retake' : 'Retry'}
               </button>
