@@ -31,7 +31,29 @@
         function getScore(level) {
             return parseInt(localStorage.getItem("math_quiz_level" + level + "_score") || "0");
         }
+        function generateLevelBlocks() {
+            let container = document.querySelector(".grid");
+            container.innerHTML = "";
 
+            for (let i = 1; i <= levels; i++) {
+                let score = getScore(i);
+                let previousLevelPassed = i === 1 || getScore(i - 1) >= 80; // Unlock only if previous level passed
+                let buttonText = score === 0 ? "Start" : score >= 80 ? "Start" : "Retry";
+                let buttonClass = previousLevelPassed ? "bg-white text-green-500" : "bg-gray-400 text-gray-700 cursor-not-allowed";
+                let buttonDisabled = previousLevelPassed ? "" : "disabled";
+
+                let levelBlock = `
+                    <div class="bg-green-500 text-center p-4 rounded-lg shadow-md">
+                        <h2 class="text-white font-bold text-lg">Level ${i}</h2>
+                        <p class="text-sm text-blue-200">${score > 0 ? score + "% Scored" : "Not Attempted"}</p>
+                        <a href="${previousLevelPassed ? `math_quiz_${i}.html` : "#"}">
+                            <button class="${buttonClass} font-semibold py-2 px-5 rounded-full mt-3" ${buttonDisabled}>${buttonText}</button>
+                        </a>
+                    </div>
+                `;
+                container.innerHTML += levelBlock;
+            }
+        }
        
         function saveScore(level, score) {
             localStorage.setItem("math_quiz_level" + level + "_score", score);
